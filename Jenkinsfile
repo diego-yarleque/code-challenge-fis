@@ -8,7 +8,7 @@ pipeline {
         }
         stage ('Build Artifact') {
             steps {
-                sh './gradlew clean build'
+                sh './gradlew -Dskip.tests clean build'
             }
         }
         stage ('Build docker image') {
