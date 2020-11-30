@@ -28,15 +28,11 @@ pipeline {
                 sh 'docker run -itd --name=fis-challenge-${BUILD_NUMBER} -p 8181:8181 dryloayza/code-challenge:${BUILD_NUMBER}'
             }
         }
-        stage('Checking curl version'){
-            steps {
-                sh 'curl --version'
-            }
-        }
         stage('Curl spring boot app'){
             steps {
-                sh 'curl -vv http://192.168.1.3:8181'
-                sh 'curl -L http://192.168.1.3:8181'
+                sh 'curl --version'
+                sh 'curl -vv 192.168.1.3:8181'
+                sh 'curl -L 192.168.1.3:8181'
             }
         }
     }
