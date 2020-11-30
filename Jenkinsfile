@@ -25,7 +25,7 @@ pipeline {
         }
         stage('Docker deploy'){
             steps {
-                sh 'docker run -itd --name=fis-challenge -p 8181:8181 dryloayza/code-challenge:${BUILD_NUMBER}'
+                sh 'docker run -itd --name=fis-challenge-${BUILD_NUMBER} -p 8181:8181 dryloayza/code-challenge:${BUILD_NUMBER}'
             }
         }
         stage('Curl spring boot app'){
