@@ -30,7 +30,7 @@ pipeline {
         }
         stage('Curl spring boot app'){
             steps {
-                sh 'curl http://localhost:8181'
+                sh 'curl http://192.168.1.3:8181'
             }
         }
     }
