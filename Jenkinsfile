@@ -23,5 +23,15 @@ pipeline {
                 }
             }
         }
+        stage('Docker deploy'){
+            steps {
+                sh 'docker run -itd -p 8181:8181 dryloayza/code-challenge:${BUILD_NUMBER}'
+            }
+        }
+        stage('Curl spring boot app'){
+            steps {
+                sh 'curl http://localhost:8181'
+            }
+        }
     }
 }
