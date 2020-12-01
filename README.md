@@ -30,8 +30,7 @@
     ```
 
    ### NOTE
-   The idea of this previous step is to use a volume for persist jenkins configuration and history.
-   Also, to be able to execute docker commands inside a dockerized jenkins program.
+   The idea of this previous step is to be able to execute docker commands inside jenkins container.
 
    
 4. Execute Jenkins locally as follows:
