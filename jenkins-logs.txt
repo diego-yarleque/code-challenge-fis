@@ -1,0 +1,191 @@
+Started by user Diego Yarlequé Loayza
+ > git rev-parse --is-inside-work-tree # timeout=10
+Setting origin to https://github.com/diego-yarleque/code-challenge-fis
+ > git config remote.origin.url https://github.com/diego-yarleque/code-challenge-fis # timeout=10
+Fetching origin...
+Fetching upstream changes from origin
+ > git --version # timeout=10
+ > git --version # 'git version 2.11.0'
+ > git config --get remote.origin.url # timeout=10
+using GIT_ASKPASS to set credentials
+ > git fetch --tags --progress -- origin +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/main
+Seen 1 remote branch
+Obtained Jenkinsfile from ca01d96dd8f2342a982c581fa1ac4e14b14bd2d4
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/Code_Pipeline_main
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+using credential github
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/diego-yarleque/code-challenge-fis # timeout=10
+Fetching without tags
+Fetching upstream changes from https://github.com/diego-yarleque/code-challenge-fis
+ > git --version # timeout=10
+ > git --version # 'git version 2.11.0'
+using GIT_ASKPASS to set credentials
+ > git fetch --no-tags --progress -- https://github.com/diego-yarleque/code-challenge-fis +refs/heads/*:refs/remotes/origin/* # timeout=10
+Checking out Revision ca01d96dd8f2342a982c581fa1ac4e14b14bd2d4 (main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f ca01d96dd8f2342a982c581fa1ac4e14b14bd2d4 # timeout=10
+Commit message: "fixing sleep time before curl execution command to spring boot app."
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout & Clone repository)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+using credential github
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/diego-yarleque/code-challenge-fis # timeout=10
+Fetching without tags
+Fetching upstream changes from https://github.com/diego-yarleque/code-challenge-fis
+ > git --version # timeout=10
+ > git --version # 'git version 2.11.0'
+using GIT_ASKPASS to set credentials
+ > git fetch --no-tags --progress -- https://github.com/diego-yarleque/code-challenge-fis +refs/heads/*:refs/remotes/origin/* # timeout=10
+Checking out Revision ca01d96dd8f2342a982c581fa1ac4e14b14bd2d4 (main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f ca01d96dd8f2342a982c581fa1ac4e14b14bd2d4 # timeout=10
+Commit message: "fixing sleep time before curl execution command to spring boot app."
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Artifact)
+[Pipeline] sh
++ ./gradlew -Dskip.tests clean build
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :clean
+> Task :compileJava
+> Task :processResources
+> Task :classes
+> Task :bootJarMainClassName
+> Task :bootJar
+> Task :jar SKIPPED
+> Task :assemble
+> Task :compileTestJava
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :test
+2020-12-01 00:29:16.367  INFO 10145 --- [extShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+
+> Task :check
+> Task :build
+
+BUILD SUCCESSFUL in 11s
+7 actionable tasks: 7 executed
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build docker image)
+[Pipeline] sh
++ docker build -t dryloayza/code-challenge:21 .
+Sending build context to Docker daemon  29.28MB
+
+Step 1/5 : FROM openjdk:8-jdk-alpine
+ ---> a3562aa0b991
+Step 2/5 : EXPOSE 8181
+ ---> Using cache
+ ---> 041d915572db
+Step 3/5 : RUN mkdir -p /app/
+ ---> Using cache
+ ---> 1d65207d8578
+Step 4/5 : ADD build/libs/fischallenge-0.0.1-SNAPSHOT.jar /app/fischallenge.jar
+ ---> 5e74c7091388
+Step 5/5 : ENTRYPOINT ["java","-jar","/app/fischallenge.jar"]
+ ---> Running in dd3015bb7338
+Removing intermediate container dd3015bb7338
+ ---> bc2f70d8cb92
+Successfully built bc2f70d8cb92
+Successfully tagged dryloayza/code-challenge:21
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push docker image)
+[Pipeline] withDockerRegistry
+$ docker login -u dryloayza -p ******** https://index.docker.io/v1/
+Login Succeeded
+[Pipeline] {
+[Pipeline] sh
++ docker push dryloayza/code-challenge:21
+The push refers to repository [docker.io/dryloayza/code-challenge]
+d2a985cb4426: Preparing
+1848b94e855c: Preparing
+ceaf9e1ebef5: Preparing
+9b9b7f3d56a0: Preparing
+f1b5933fe4b5: Preparing
+ceaf9e1ebef5: Mounted from library/maven
+f1b5933fe4b5: Mounted from library/maven
+9b9b7f3d56a0: Mounted from library/maven
+1848b94e855c: Pushed
+d2a985cb4426: Pushed
+21: digest: sha256:2b2fd4f92faa42eca490a0b80fad375a8da733b984f147b321dbb098aad70f13 size: 1366
+[Pipeline] }
+[Pipeline] // withDockerRegistry
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Docker deploy)
+[Pipeline] sh
++ docker run -itd --name=fis-challenge-21 -p 8181:8181 dryloayza/code-challenge:21
+f3aafe63772e5a0791e63216da2351738451e22d673cac949163f8ecf0c562de
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Curl spring boot app)
+[Pipeline] sh
++ sleep 40
+[Pipeline] sh
++ curl -vv 192.168.1.3:8181
+* Rebuilt URL to: 192.168.1.3:8181/
+*   Trying 192.168.1.3...
+* TCP_NODELAY set
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Connected to 192.168.1.3 (192.168.1.3) port 8181 (#0)
+> GET / HTTP/1.1
+> Host: 192.168.1.3:8181
+> User-Agent: curl/7.52.1
+> Accept: */*
+>
+< HTTP/1.1 200
+< Content-Type: text/plain;charset=UTF-8
+< Content-Length: 12
+< Date: Tue, 01 Dec 2020 00:31:04 GMT
+<
+{ [12 bytes data]
+* Curl_http_done: called premature == 0
+
+100    12  100    12    0     0    104      0 --:--:-- --:--:-- --:--:--   105
+* Connection #0 to host 192.168.1.3 left intact
+Hello World!
+[Pipeline] sh
++ curl -L 192.168.1.3:8181
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100    12  100    12    0     0   2595      0 --:--:-- --:--:-- --:--:--  3000
+Hello World!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
