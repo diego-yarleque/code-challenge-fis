@@ -28,15 +28,50 @@
     ```
     docker run -d --name=jenkins -v /var/run/docker.sock:/var/run/docker.sock -p 8080:8080 -p 50000:50000 jenkins:latest
     ```
-   
+
    ### NOTE
    The idea of this previous step is to use a volume for persist jenkins configuration and history.
    Also, to be able to execute docker commands inside a dockerized jenkins program.
 
+   
+4. Execute Jenkins locally as follows:
+
+     ```
+     http://localhost:8080
+     ```
+
 ---
 # Jenkins configuration
 
-* This step is customize and depends on each user.
+* Credentials configuration
+
+
+    1. In jenkins main page, click on "Manage Jenkins"
+    2. Select "Manage Credentials"
+    3. Select "Jenkins"
+    4. Select "Global credentials"
+    5. Click on "Add Credentials"
+    6. Choose "Username with password" option
+    7. Fill in Username and Password (with a github account or similar)
+    8. Fill in the id with a related name to the provided account type
+    9. Optionally, fill in the "description field"
+    10. Repeat the same steps for dockerhub authentication
+
+* Pipeline creation
+
+    After configuring our new jenkins user and plugins, log in with that account and
+    do the following steps:
+    
+    
+    1. In jenkins main page, click on "New Item"
+    2. Select "Multibranch pipeline" and put it a name
+    3. Select "Ok"
+    4. In the pipeline configuration, choose a display name and description
+    5. Select Branch sources and choose Git
+    6. Fill in the git repository with the respective url
+    7. Choose your git credentials (Credentials configuration)
+    8. Click apply and then save
+    9. After pipeline creation, choose it and select "Build Now" to execute it. 
 
 ---
 
